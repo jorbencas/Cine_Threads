@@ -24,7 +24,7 @@ public class Validacio {
 				System.out.println("\tERROR: Valor no numeric");
 			}
 		} while (!validatSencer);
-		// s.close();
+		//s.close();
 
 		return sencer;
 	}
@@ -56,7 +56,7 @@ public class Validacio {
 					System.out.println("\tERROR: Valor no numeric");
 			}
 		} while (!validatSencer);
-		// s.close();
+		//s.close();
 
 		return sencer;
 	}
@@ -180,7 +180,7 @@ public class Validacio {
 			strdata = s.nextLine();
 			if (strdata.toUpperCase().matches(
 					"^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]$")) { // valor
-																		// boolea
+				// boolea
 				validatData = true;
 				String[] date = strdata.split("/");
 
@@ -197,7 +197,7 @@ public class Validacio {
 			System.out.print("\n\tHora de la sessió? (hh:mm) ");
 			strdata = s.nextLine();
 			if (strdata.toUpperCase().matches("^[0-9][0-9]:[0-9][0-9]$")) { // valor
-																			// boolea
+				// boolea
 				validatHora = true;
 				String[] time = strdata.split(":");
 
@@ -236,7 +236,7 @@ public class Validacio {
 			} else { // nou valor introduit
 				if (strdata.toUpperCase().matches(
 						"^[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]$")) { // valor
-																			// boolea
+					// boolea
 					validatData = true;
 					String[] date = strdata.split("/");
 
@@ -281,7 +281,7 @@ public class Validacio {
 	}
 
 	// --------------------------------------------------
-	//metode que  mostra per pantalla missatge i retorna el Bigdecimal introduida per teclat
+	//metode que  mostra per pantalla missatge i retorna el BigDecimal introduida per teclat
 	static BigDecimal validaMoneda(String missatge) {
 		BigDecimal resultat = null;
 		String cadena = null;
@@ -302,7 +302,7 @@ public class Validacio {
 	}
 
 	// --------------------------------------------------
-	//metode que  mostra per pantalla missatge i retorna el Bigdecimal introduida per teclat, o
+	//metode que  mostra per pantalla missatge i retorna el BigDecimal introduida per teclat, o
 	//si es polsa INTRO retorna el valor defecte(2n argument)
 	static BigDecimal validaMonedaDefecte(String missatge, BigDecimal antiga) {
 		BigDecimal resultat = null;

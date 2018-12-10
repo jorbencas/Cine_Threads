@@ -11,52 +11,93 @@ public class Sala {
 
 	//CONSTRUCTORS
 
-	//CONSTRUCTOR INTERACTIU
+	//Constructor INTERACTIU
 	public Sala() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
+		boolean sala3d = false;
+		boolean validatIdSala = false;
+		int numeroSala = 0;
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>");
+		System.out.println("Creació de la SALA\n>>>>>>>>>>>>>>>>>>>>>");
+		do{
+			numeroSala = Validacio.validaSencer("\tNumero de la Sala? ",1000);
+			validatIdSala = Sales.validaIdSala(numeroSala);
+			if (!validatIdSala)
+				System.out.println("\tERROR: Numero de SALA existent");
+		} while (!validatIdSala);
+		this.numeroSala=numeroSala;
+
+		sala3d = Validacio.validaBoolea("\n\tSala 3D? (S/N)");
+		this.sala3D=sala3d;
+
+		int fseients = Validacio.validaSencer("\tNum de files de seients de la Sala? ",100);
+		this.files=fseients;
+
+		int seients = Validacio.validaSencer("\tNum de seients per fila? ",100);
+		this.tamanyFila=seients;
+
+		System.out.println("\n<<<<<<<<<<<<<<<<<<<<<<<< ");
 	}
 
 	//*********************************************************
-	//CONSTRUCTOR1
+	//Constructor 1
 	public Sala(int numero, int nfiles, int seients) {
+
 		this.numeroSala = numero;
+		this.sala3D = false;
 		this.files = nfiles;
 		this.tamanyFila = seients;
 	}
 
 	//*********************************************************
-	//CONSTRUCTOR2
+	//Constructor 2
 	public Sala(int numero, boolean sala3d, int nfiles, int seients) {
+
 		this.numeroSala = numero;
+		this.sala3D = sala3d;
 		this.files = nfiles;
 		this.tamanyFila = seients;
-		this.sala3D = sala3d;
 	}
 
 	//*********************************************************
-	//MODIFICA LES DADES DE LA SALA
+	//Modifica la SALA
 	public void modificaSala() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
+		boolean sala3d = false;
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>");
+		System.out.println("\tModificació de la SALA\n>>>>>>>>>>>>>>>>>>>>>");
+		System.err.println("\tPrem tecla INTRO per matenir informació anterior ");
+
+		numeroSala = Validacio.validaSencerDefecte("\tNumero de la Sala? ",1000, this.getNumeroSala());
+		this.setNumeroSala(numeroSala);
+
+		sala3d = Validacio.validaBooleaDefecte("\n\tSala 3D? (S/N)",this.isSala3D());
+		this.setSala3D(sala3d);
+
+		int fseients = Validacio.validaSencerDefecte("\tNum de files de seients de la Sala? ",100, this.getFiles());
+		this.setFiles(fseients);
+
+		int seients = Validacio.validaSencerDefecte("\tNum de seients per fila? ",100, this.getTamanyFila());
+		this.setTamanyFila(seients);
+
+		System.out.println("\n<<<<<<<<<<<<<<<<<<<<< ");
+		System.out.println(this);
 	}
 
 	//*********************************************************
-	//ESBORRA LA SALA
-	public void esborraSala(int i) {
-		System.out.println("La sala" + i + "sha borrat");
+	//Esborra la SALA
+	public void esborraSala() {
+		System.out.println("Sala esborrada!");
 	}
 
 	//*********************************************************
-	//TOSTRING 
+	//metode ToString 
 	@Override
 	public String toString() {
-		return "Sala [numeroSala=" + numeroSala + "\t sala3D=" + sala3D
-				+ "\t files=" + files + "\t tamanyFila=" + tamanyFila +"]";
+		return "Sala [numeroSala=" + numeroSala + " sala3D=" + sala3D
+				+ " files=" + files + " tamanyFila=" + tamanyFila+"]";
 	}
-	
+
+
+	//GETTERS & SETTERS
 	//*********************************************************
 	public  int getNumeroSala() {
 		return numeroSala;

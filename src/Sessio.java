@@ -3,145 +3,276 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
 
+
 public class Sessio {
+	private String nomSessio;
+	private Calendar data;
+	private  Sala sala;
+	private Seient[][] seients;
+	private BigDecimal preu;
+	private boolean assignadaPeli;
 
-    private String nomSessio;
-    private Calendar data = Calendar.getInstance();
-    private Sala sala;
-    private Seient[][] seients;
-    private BigDecimal preu;
 
-    //*********************************************************
-    //CONSTRUCTOR1
-    public Sessio(String nomSessio, Calendar data, Sala sala, BigDecimal preu) {
-        this.nomSessio = nomSessio;
-        this.data = data;
-        this.sala = sala;
-        this.preu = preu;
-    }
+	//*********************************************************
+	//Constructor 1
+	public Sessio(String nomSessio, Calendar data, Sala sala, BigDecimal preu) {
 
-    //*********************************************************
-    //CONSTRUCTOR2
-    public Sessio(String nomSessio, int dia, int mes, int any, int hora, int minuts, Sala sala, BigDecimal preu) {
-        this.nomSessio = nomSessio;
-        this.data.set(any, mes, dia, hora, minuts);
-        this.sala = sala;
-        this.preu = preu;
-    }
+		this.nomSessio = nomSessio;
+		this.data = data;
+		this.sala = sala;
+		this.preu = preu;
+		this.seients = new Seient[sala.getFiles()][sala.getTamanyFila()];
+		for (int i=0; i < sala.getTamanyFila(); i++){
+			for (int j=0; j < sala.getFiles(); j++){
+				this.seients[i][j] = new Seient(i,j);
+			}
+		}
+		this.assignadaPeli=false;
+	}
 
-    //*********************************************************
-    //CONSTRUCTOR INTERACTIU
-    public Sessio() {
+	//*********************************************************
+	//Constructor 2
+	public Sessio(String nomSessio, int dia,int mes, int any, int hora, int minuts, Sala sala, BigDecimal preu) {
 
-    }
+		this.nomSessio = nomSessio;
+		this.data = Calendar.getInstance();
+		this.data.set(any, mes, dia, hora, minuts);
+		this.sala = sala;
+		this.preu = preu;
+		this.seients = new Seient[sala.getFiles()][sala.getTamanyFila()];
+		for (int i=0; i < sala.getTamanyFila(); i++){
+			for (int j=0; j < sala.getFiles(); j++){
+				this.seients[i][j] = new Seient(i,j);
+			}
+		}
+		this.assignadaPeli=false;
+	}
 
-    //*********************************************************
-    //MODIFICA DADES DE LA SESSIO
-    public void modificaSessio() {
-        //...
-        // IMPLEMENTAR CODI ACÍ
-        //...
-    }
+	//*********************************************************
+	//Constructor INTERACTIU
+	public Sessio() {
+		Scanner s = new Scanner(System.in);
+		boolean validatIdSessio = false;
+		System.out.println(">>>>>>>>>>>>>>>>>>>");
+		System.out.println("Creació de la SESSIO\n>>>>>>>>>>>>>>>>>>> ");
 
-    //*********************************************************
-    //ESBORRA LA SESSIO
-    public void esborraSessio() {
-        //...
-        // IMPLEMENTAR CODI ACÍ
-        //...
-    }
+		do{
+			this.nomSessio = Validacio.validaCadena("\tIndentificador de la sessió? ");
+			validatIdSessio = Sessions.validaIdSessio(this.nomSessio);
+			if (!validatIdSessio)
+				System.out.println("\tERROR: Numero de SESSIO existent");
+		} while (!validatIdSessio);
 
-    //*********************************************************
-    //ASIGNA DISTRIBUCIO DE SEIENTS A LA SALA
-    public void setMapaSessio() {
-        for (int i = 0; i < this.seients.length; i++) {
-            for (int j = 0; j < this.seients[0].length; j++) {
-                this.seients[i][j] = new Seient();
-                this.seients[i][j].setFilaSeient(i);
-                this.seients[i][j].setNumeroSeient(j);
+		this.data = Validacio.validaData("\n\tData de la sessió? (dd/mm/aaaa) ");
+		this.mostraDataFormatada();
 
-                //System.out.print(this.seients[i][j].iconaSeient() + " ");
-            }
+		System.out.print("\n\tIndentificador de la sala? (0 per nova Sala)");
+		//Llista TOTES les SALES DISPONIBLES
+		Sales.llistarSales();
+		System.out.println("");
 
-        }
-    }
+		String nsala = s.next();
+		//Si es vol afegir una nova SALA...
+		if (nsala.equalsIgnoreCase("0")) {
+			this.sala = new Sala();
+			Sales.afegirSala(this.sala);
+		}else 
+			this.sala = Sales.retornaSala(Integer.parseInt(nsala));
 
-    //*********************************************************
-    //MOSTRA DISTRIBUCIO DE SEIENTS A LA SALA
-    public void mapaSessio() {
-        System.out.println("Mapa de la session " + this.getNomSessio());
-        for (int i = 0; i < this.seients.length; i++) {
-            for (int j = 0; j < this.seients[0].length; j++) {
-                System.out.print(this.seients[i][j].iconaSeient() + " ");
-            }
-            System.out.println("");
-        }
-    }
+		this.preu = Validacio.validaMoneda("\tPreu de la sessió? ");
 
-    //*********************************************************
-    //MOSTRA DATA EN FORMAT ESPANYOL
-    public void mostraDataFormatada() {
-        //...
-        // IMPLEMENTAR CODI ACÍ
-        //...
-    }
+		this.seients = new Seient[sala.getFiles()][sala.getTamanyFila()]; 		
 
-    //*********************************************************
-    //MOSTRA TICKET DE COMPRA DE LA PELICULA
-    public void imprimirTicket(Seient s, Sessio se, Sala sa, Pelicula p) {
-        //...
-        // IMPLEMENTAR CODI ACÍ
-        //...
+		//Creacio SEIENTS
+		for (int i=0; i < sala.getTamanyFila(); i++){
+			for (int j=0; j < sala.getFiles(); j++){
+				this.seients[i][j] = new Seient(i,j);
+			}
+		}
 
-    }
+		this.assignadaPeli=false;
 
-    //*********************************************************
-    //Metode TOSTRING
-    @Override
-    public String toString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MMMMM/yyyy hh:mm:ss");
-        return "Sessio [nomSessio=" + nomSessio + "\t data=" + sdf.format(data.getTime()) + "\t sala=" + sala + "\t preu=" + preu + "]";
-    }
+		System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+	}
 
-    //GETTERS & SETTERS
-    public String getNomSessio() {
-        return nomSessio;
-    }
+	//*********************************************************
+	//Modifica la SESSIO
+	public void modificaSessio() {
+		Scanner s = new Scanner(System.in);
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>");
+		System.out.println("\tModificació de la SESSIO\n>>>>>>>>>>>>>>>>>>>>>");
+		System.err.println("\tPrem tecla INTRO per matenir informació anterior ");
 
-    public void setNomSessio(String nomSessio) {
-        this.nomSessio = nomSessio;
-    }
+		this.nomSessio = Validacio.validaCadenaDefecte("\tIndentificador de la sessió? ",this.getNomSessio());
 
-    public Calendar getData() {
-        return data;
-    }
+		this.data = Validacio.validaDataDefecte("\n\tData de la sessió? (dd/mm/aaaa) ["
+				+ data.get(Calendar.DAY_OF_MONTH) + "/"
+				+ data.get(Calendar.MONTH) + "/"
+				+ data.get(Calendar.YEAR) + "]",data);
+		this.mostraDataFormatada();
 
-    public void setData(Calendar data) {
-        this.data = data;
-    }
+		System.out.print("\n\tIndentificador de la sala? ["+ this.sala.getNumeroSala()+" ] (0 per nova Sala)");
+		//Llista TOTES les SALES
+		Sales.llistarSales();
+		System.out.println("");
 
-    public Sala getSala() {
-        return sala;
-    }
+		String nsala = s.nextLine();
 
-    public void setSala(Sala sala) {
-        this.sala = sala;
-    }
+		if (nsala.equalsIgnoreCase("0")) { //Nova SALA
+			this.sala = new Sala();
+			Sales.afegirSala(this.sala);
+		} else { //SALA de la llista o antiga SALA 
+			if (nsala.compareToIgnoreCase("")!=0) { //SALA de la llista 
+				this.sala = Sales.retornaSala(Integer.parseInt(nsala));
+			}else{ //SALA antiga 
+			} 
+		}
 
-    public BigDecimal getPreu() {
-        return preu;
-    }
+		this.preu = Validacio.validaMonedaDefecte("\tPreu de la sessió? ",this.getPreu());
 
-    public void setPreu(BigDecimal preu) {
-        this.preu = preu;
-    }
+		boolean reinicia = Validacio.validaBoolea("\tReiniciar assignació seients? (S/N) ");
 
-    public Seient[][] getSeients() {
-        return seients;
-    }
+		if(reinicia) {
+			//Creacio SEIENTS
+			for (int i=0; i < this.sala.getTamanyFila(); i++){
+				for (int j=0; j < this.sala.getFiles(); j++){
+					if(this.seients[i][j]!=null) //Si seient ja existeix, l'allibera	
+						this.seients[i][j].alliberaSeient();
+					else	//si NO existeix, es crea 
+						this.seients[i][j] = new Seient(i,j);
+				}
+			}
+		}else{//resposta = N. Deixa coses com estan
+		}
 
-    public void setSeients(Seient[][] seients) {
-        this.seients = seients;
-    }
+		System.out.println("\t=======================");
+		System.out.println(this);
+
+		this.assignadaPeli= Validacio.validaBooleaDefecte("\tTé PELICULA associada? (S/N) ", this.assignadaPeli);
+	}
+
+	//*********************************************************
+	//Esborra la SESSIO
+	public void esborraSessio() {
+		System.out.println("Sessió esborrada!");
+	}
+
+	//*********************************************************
+	//Mostra la distribució de SEIENTS a la SALA
+	public void mapaSessio(){
+		System.out.println("\n\t --------  MAPA SESSIO  -----------");
+		//CAPÇALERA de la SALA
+		System.out.print("\t Seient-> ");
+		for (int x=1; x <= this.sala.getTamanyFila(); x++)
+			System.out.print(x +"  ");
+
+		//COS de la SALA
+		System.out.println();
+		for (int i=0; i < this.sala.getTamanyFila(); i++){
+			System.out.print("\t Fila "+(i+1)+": ");
+			for (int j=0; j < this.sala.getFiles(); j++){
+				System.out.print(" "+this.seients[i][j].iconaSeient()+" ");
+			}//endfor	
+			System.out.println();
+		}//endfor
+		System.out.println("\n\t SIMBOLOGIA: X=ocupat; O=lliure; ?=reservant\n\n");
+	}
+
+	//*********************************************************
+	//Mostra DATA en format espanyol
+	public void mostraDataFormatada(){
+		int day = this.data.get(Calendar.DAY_OF_MONTH);
+		int month = this.data.get(Calendar.MONTH);
+		int year = this.data.get(Calendar.YEAR);
+		int hour = this.data.get(Calendar.HOUR_OF_DAY);
+		int minute = this.data.get(Calendar.MINUTE);
+
+		System.out.print(day+"/"+month+"/"+year+" "+hour+":"+minute);
+	}
+
+
+	//*********************************************************
+	//Mostra TICKET de compra de la PELICULA
+	public void imprimirTicket(Seient s, Sessio se, Sala sa, Pelicula p){
+		System.out.println("Imprimint el seu Ticket...");
+		System.out.println("***************************");
+		System.out.println("* ***TICKET ENTRADA *******");
+		System.out.println("* PELICULA: "+ p.getNomPeli() +" *");
+		System.out.print("* HORARI: ");
+		se.mostraDataFormatada();
+		System.out.println("*\n* Seient FILA:"+(s.getFilaSeient()+1)+ " SEIENT:"+(s.getNumeroSeient()+1)+"*");
+		System.out.println("* Preu: "+ se.getPreu()+" €");
+		System.out.println("****************************");
+
+
+	}
+
+
+	//*********************************************************
+	//Metode ToString
+	@Override
+	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MMMMM/yyyy hh:mm:ss");
+		return "Sessio [nomSessio=" + nomSessio + "\n\t data=" + sdf.format(data.getTime()) + 
+				"\n\t sala="+ sala + "\n\t preu=" + preu + "\n\t assignadaPeli="+ assignadaPeli + "]";
+	}
+
+
+	//GETTERS & SETTERS
+	//*********************************************************
+	public  String getNomSessio() {
+		return nomSessio;
+	}
+
+
+	public  void setNomSessio(String nomSessio) {
+		this.nomSessio = nomSessio;
+	}
+
+
+	public  Calendar getData() {
+		return data;
+	}
+
+
+	public  void setData(Calendar data) {
+		this.data = data;
+	}
+
+
+	public  Sala getSala() {
+		return sala;
+	}
+
+
+	public  void setSala(Sala sala) {
+		this.sala = sala;
+	}
+
+
+	public  BigDecimal getPreu() {
+		return preu;
+	}
+
+
+	public  void setPreu(BigDecimal preu) {
+		this.preu = preu;
+	}
+
+	public  Seient[][] getSeients() {
+		return seients;
+	}
+
+	public  void setSeients(Seient[][] seients) {
+		this.seients = seients;
+	}
+
+	public boolean isAssignadaPeli() {
+		return assignadaPeli;
+	}
+
+	public void setAssignadaPeli(boolean assignadaPeli) {
+		this.assignadaPeli = assignadaPeli;
+	}
 
 }

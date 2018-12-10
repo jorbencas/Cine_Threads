@@ -9,69 +9,87 @@ public class Sales {
 
 	//CONSTRUCTORS
 	public Sales() {
-		 Sales.sales = new ArrayList<>();
+		this.sales = new ArrayList<Sala>();
 	}
 
+	//Constructor 1
 	//*********************************************************
 	public Sales(ArrayList<Sala> sales) {
-		 Sales.sales = sales;
+		this.sales = sales;
 	}
+
+
 	//*********************************************************
-
-
-	//METODES
+	//afegir SALA
 	public static void afegirSala(Sala s){
-		if (!Sales.validaIdSala(s.getNumeroSala())) {
-            Sales.sales.add(s);
-            System.out.println("Añadido exitosamente");
-        } else {
-            System.out.println("Ya existe... No se puede añadir la misma sala");
-}
+		sales.add(s);
 	}
 
 	//*********************************************************
-	//MOSTRA EL LLISTAT DE SALES
+	//Llista les SALES
 	public static void llistarSales(){
-		 for (int i = 0; i < Sales.sales.size(); i++) {
-	            System.out.println("[" + (i + 1 ) + "]" + Sales.sales.get(i).toString());
-		 }
+		if (quantitatSales()==0) 
+			System.out.println("\n\t No hi ha cap SALA registrada");
+		else {
+			System.out.println("\n******** SALES *******");
+			for(int i=1; i<=quantitatSales();i++){
+				System.out.println("\n\t "+i+"-> "+sales.get(i-1).toString());
+				System.out.println("\t---");
+			}
+			System.out.println();
+		}
 
 	}
 
 	//*********************************************************
-	//VERIFICA SI EL NUM DE SALA EXISTEIX AL LLISTAT
+	//Verifica si el identificador de SALA existeix al Llistat
+	//Retorna TRUE: Sala NO existeix
+	//Retorna FALSE: Sala ja existeix
 	public static  boolean validaIdSala(int s){
-		 for (int i = 0; i < Sales.sales.size(); i++) {
-	            if (Sales.sales.get(i).getNumeroSala() == (s - 1)) {
-	                return true;
-	            }
-	        }
-	return false;
+		boolean resultat = true;
+		for(int i=0; i<quantitatSales();i++){
+			if (sales.get(i).getNumeroSala()==s) return false;
+		}
+		return resultat;
 	}
 
 	//*********************************************************
-	//RETORNA LA SALA DE LA POSICIO i
-	public static Sala retornaSala(int i){
-		 return Sales.sales.get(i);
+	//Retorna la SALA de la posicio i
+	public static  Sala retornaSala(int i){
+		if (i <= quantitatSales())
+			return sales.get(i-1);
+		else {
+			System.out.println("ERROR Sales.retornaSala: valor proporcionat fora de rang");
+			return null;
+		}
+
 	}
 
 	//*********************************************************
-	//MODIFICA LA SALA DE LA POSICIO i
-	public static  void modificaSala(Sala s, int i){
-		 Sales.sales.set(i, s);
+	//Modifica la SALA de la posicio i
+	public static  void modificaSala(int i){
+		if (i <= quantitatSales())
+			sales.get(i-1).modificaSala();
+		else {
+			System.out.println("ERROR Sales.modificaSala: valor proporcionat fora de rang");
+		}
 	}
 
 	//*********************************************************
-	//ESBORRA LA SALA DE LA POSICIO i
-	public static void esborraSala(int s){
-		sales.get((s -1)).esborraSala(s);
-		sales.remove((s -1 ));
+	//Esborra la SALA de la posicio i
+	public static void esborraSala(int i){
+		if (i <= quantitatSales()){
+			sales.get(i-1).esborraSala();
+			sales.remove(i-1);
+		}else {
+			System.out.println("ERROR Sales.modificaSala: valor proporcionat fora de rang");
+		}
 	}
 
 	//*********************************************************
-	//RETORNA LA QUANTITAT DE SALES 
+	//Retorna la QUANTITAT de les SALES 
 	public static int quantitatSales(){
-		 return Sales.sales.size();
+		return sales.size();
 	}
 
 	//GETTERS & SETTERS

@@ -3,83 +3,107 @@ import java.util.Scanner;
 
 
 public class Pelicules {
-    private static ArrayList<Pelicula> pelicules;
 
-    //CONSTRUCTOR1
-    public Pelicules() {
-        pelicules = new ArrayList<>();
-    }
+	private static ArrayList<Pelicula> pelicules;
 
-    //CONSTRUCTOR2
-    public Pelicules(ArrayList<Pelicula> pelicules) {
-        Pelicules.pelicules = pelicules;
-    }
+	//Constructor 1
+	public Pelicules() {
+		this.pelicules = new ArrayList<Pelicula>();
+	}
 
-    //*********************************************************
-    //AFEGIR PELICULA AL LLISTAT
-    public static void afegirPelicula(Pelicula s) {
-        Pelicules.pelicules.add(s);
-    }
+	//Constructor  2
+	public Pelicules(ArrayList<Pelicula> pelicules) {
+		this.pelicules = pelicules;
+	}
 
-    //*********************************************************
-    //VISUALITZA TOTES LES PELICULES DISPONIBLES
-    public static int llistarPelicules() {
-        for (int i = 0; i < Pelicules.pelicules.size(); i++) {
-            System.out.println("[" + ( i + 1 ) + "] " + Pelicules.pelicules.get(i).toString());
-        }
-        return  Pelicules.pelicules.size();
-    }
+	//*********************************************************
+	//Afegeix una PELICULA al ArrayList
+	public static void afegirPelicula(Pelicula s){
+		pelicules.add(s);
+	}
 
-    //*********************************************************
-    //RETORNA PELICULA DE LA POSICIO i
-    public static Pelicula retornaPelicula(int i) {
-        return Pelicules.pelicules.get(i);
-    }
+	//*********************************************************
+	//Comprova si el nom de la PELICULA passada com a String ja està al ArrayList  
+	public static boolean validaIdSessio(String s){
+		boolean resultat = true;
+		for(int i=0; i<quantitatPelicules();i++){
+			if (pelicules.get(i).getNomPeli().compareToIgnoreCase(s)==0) return false;
+		}
+		return resultat;
+	}
 
-    //*********************************************************
-    //MODIFICA PELICULA DE LA POSICIO i
-    public static void modificaPelicula(int i) {
-        //...
-        // IMPLEMENTAR CODI ACÍ
-        //...
-    }
+	//*********************************************************
+	//Mostra TOTES les PELICULES
+	public static int llistarPelicules(){
+		if (quantitatPelicules()==0) 
+			System.out.println("\n\t No hi ha cap PELICULA registrada");
 
-    //*********************************************************
-    //ESBORRA LA PELICULA DE LA POSICIO i
-    public static void esborraPelicula(int i) {
-        if (Pelicules.retornaPelicula(i) != null) {
-            Pelicules.pelicules.remove(i);
-        } else {
-            System.out.println("No existe dicha pelicula");
-        }
-    }
+		for(int i=1; i<=quantitatPelicules();i++){
+			System.out.println("\n\t "+i+"-> "+pelicules.get(i-1).toString());
+		}
+		System.out.println();
+		return quantitatPelicules();
+	}
 
-    //*********************************************************
-    //NUMERO DE PELICULES
-    public static int quantitatPelicules() {
-        return Pelicules.pelicules.size();
-    }
 
-    // ---------------------------------
-    public void associaPeliculaSessio(Pelicules pelicules, Sessions sessions) {
-        //...
-        // IMPLEMENTAR CODI ACÍ
-        //...
-    }
+	//*********************************************************
+	//Retorna la  PELICULA de la posicio i
+	public static Pelicula retornaPelicula(int i){
+		if (i <= quantitatPelicules()){
+			return pelicules.get(i-1);
 
-    public static void asociarPeliculaSesion(Pelicula pel, Sessio ses) {
-        pel.getSessionsPeli().add(ses);
-    }
+		}else {
+			System.out.println("ERROR Pelicules:retornaSessio: valor proporcionat fora de rang");
+			return null;
+		}
+	}
 
-    //-------------------------------------
-    //GETTERS & SETTERS
-    public ArrayList<Pelicula> getPelicules() {
-        return pelicules;
-    }
+	//*********************************************************
+	//Modifica la PELICULA de la posicio i
+	public static void modificaPelicula(int i){
+		if (i <= quantitatPelicules())
+			pelicules.get(i-1).modificaPelicula();
+		else {
+			System.out.println("ERROR Pelicules.modificaSessio: valor proporcionat fora de rang");
+		}
+	}
 
-    public void setPelicules(ArrayList<Pelicula> pelicules) {
-        this.pelicules = pelicules;
-    }
+	//*********************************************************
+	//Esborra la PELICULA de la posicio i
+	public static void esborraPelicula(int i){
+		if (i <= quantitatPelicules()){
+			if (pelicules.get(i-1).getSessionsPeli().size()>0) {//Si la Pelicula conté sessions, preguntem què fer
+				if(Validacio.validaBoolea("\n\t La Pelicula conté Sessions. Esborra igualment? (S/N):")) { //Esborrem
+					pelicules.get(i-1).esborraPelicula();
+					pelicules.remove(i-1);
+				}else //No esborrem
+					System.out.println(" PELICULA NO esborrada");
+			}
+		}else {
+			System.out.println("ERROR Sales.modificaSala: valor proporcionat fora de rang");
+		}
+	}
+
+	//*********************************************************
+	//Retorna el num de PELICULES
+	public static int quantitatPelicules(){
+		return pelicules.size();
+	}
+
+
+	
+
+	//-------------------------------------
+
+	//GETTERS & SETTERS
+	public  ArrayList<Pelicula> getPelicules() {
+		return pelicules;
+	}
+
+	public  void setPelicules(ArrayList<Pelicula> pelicules) {
+		this.pelicules = pelicules;
+	}
+
 
 }
 
