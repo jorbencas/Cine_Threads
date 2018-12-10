@@ -3,163 +3,192 @@ import java.util.Scanner;
 
 public class Pelicula {
 
-	private String nomPeli;
-	private String nacionalitat;
-	private int duracio;
-	private String director;
-	private String interprets;
-	private String argument;
-	private String genere;
-	private String classificacio;
-	private ArrayList<Sessio> sessionsPeli;
+    private String nomPeli;
+    private String nacionalitat;
+    private int duracio;
+    private String director;
+    private String interprets;
+    private String argument;
+    private String genere;
+    private String classificacio;
+    private ArrayList<Sessio> sessionsPeli;
 
-	// ---------------------------------
+    // ---------------------------------
+    public Pelicula() {
+        this.sessionsPeli = new ArrayList<Sessio>();
+    }
 
-	public Pelicula() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...	
-	}
+    // ---------------------------------
+    public void modificaPelicula() {
+        //...
+        // IMPLEMENTAR CODI ACÍ
+        //...
+    }
 
-	// ---------------------------------
+    // ---------------------------------
+    public Pelicula(String nomPeli) {
+        this.nomPeli = nomPeli;
+        this.sessionsPeli = new ArrayList<Sessio>();
+    }
 
-	public void modificaPelicula() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    // ---------------------------------
+    public Pelicula(String nomPeli, String nacionalitat, int duracio,
+            String director, String interprets, String argument, String genere,
+            String classificacio) {
 
+        this.nomPeli = nomPeli;
+        this.nacionalitat = nacionalitat;
+        this.duracio = duracio;
+        this.director = director;
+        this.interprets = interprets;
+        this.argument = argument;
+        this.genere = genere;
+        this.classificacio = classificacio;
+        this.sessionsPeli = new ArrayList<Sessio>();
 
-	// ---------------------------------
+    }
 
-	public Pelicula(String nomPeli) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    // ---------------------------------
+    public Pelicula(String nomPeli, String nacionalitat, int duracio,
+            String director, String interprets, String argument, String genere,
+            String classificacio, ArrayList<Sessio> sessionsPeli) {
 
-	// ---------------------------------
+        this.nomPeli = nomPeli;
+        this.nacionalitat = nacionalitat;
+        this.duracio = duracio;
+        this.director = director;
+        this.interprets = interprets;
+        this.argument = argument;
+        this.genere = genere;
+        this.classificacio = classificacio;
+        this.sessionsPeli = sessionsPeli;
+    }
 
-	public Pelicula(String nomPeli, String nacionalitat, int duracio,
-			String director, String interprets, String argument, String genere,
-			String classificacio) {
+    // ---------------------------------
+    @Override
+    public String toString() {
+        return "Pelicula [nomPeli=" + nomPeli + "\t nacionalitat="
+                + nacionalitat + "\t duracio=" + duracio + "\t director="
+                + director + "\t interprets=" + interprets + "\t argument="
+                + argument + "\t genere=" + genere + "\t classificacio="
+                + classificacio + "\t sessionsPeli=" + sessionsPeli + "]";
+    }
 
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //LLISTA EL LLISTAT DE SESSIONS PER LA PELICULA
+    public int llistarSessionsPeli() {
+        if (this.getSessionsPeli().size() > 0) {
+            for (int i = 0; i < this.getSessionsPeli().size(); i++) {
+                System.out.println("[" + (i - 1 ) + "] " + this.getSessionsPeli().get(i));
+            }
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
-	// ---------------------------------
+    public Sessio retornaSessioPeli(int i) {
+        if (this.getSessionsPeli().get(i) != null) {
+            return this.getSessionsPeli().get(i);
+        } else {
+            System.out.println("No existe");
+        }
+        return null;
+    }
 
-	public Pelicula(String nomPeli, String nacionalitat, int duracio,
-			String director, String interprets, String argument, String genere,
-			String classificacio, ArrayList<Sessio> sessionsPeli) {
+    public void esborraSessioPeli(int i) {
+        if (this.getSessionsPeli().get(i) != null) {
+            Seient[][] asientos = this.getSessionsPeli().get(i).getSeients();
+            boolean hayReservados = false;
+            for (int j = 0; j < asientos.length; j++) {
+                for (int k = 0; k < asientos[0].length; k++) {
+                    if (asientos[j][k].getDisponibilitat() == Seient.Estat.OCUPAT) {
+                        hayReservados = true;
+                    }
+                }
+            }
+            if (hayReservados == false) {
+                this.getSessionsPeli().remove(this.retornaSessioPeli(i));
+                System.out.println("Eliminado con exito");
+            } else {
+                System.out.println("No se puede eliminar porque hay un asiento reservado");
+            }
 
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+        } else {
+            System.out.println("No existe, por lo que no se puede borrar");
+        }
+    }
 
-	// ---------------------------------
+    public String getNomPeli() {
+        return nomPeli;
+    }
 
-	@Override
-	public String toString() {
-		return "Pelicula [nomPeli=" + nomPeli + "\n\t nacionalitat="
-				+ nacionalitat + "\n\t duracio=" + duracio + "\n\t director="
-				+ director + "\n\t interprets=" + interprets + "\n\t argument="
-				+ argument + "\n\t genere=" + genere + "\n\t classificacio="
-				+ classificacio + "\n\t sessionsPeli=" + sessionsPeli + "]";
-	}
+    public void setNomPeli(String nomPeli) {
+        this.nomPeli = nomPeli;
+    }
 
-	//LLISTA EL LLISTAT DE SESSIONS PER LA PELICULA
-	public int llistarSessionsPeli() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    public String getNacionalitat() {
+        return nacionalitat;
+    }
 
-	public Sessio retornaSessioPeli(int i) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    public void setNacionalitat(String nacionalitat) {
+        this.nacionalitat = nacionalitat;
+    }
 
-	public void esborraSessioPeli(int i) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    public int getDuracio() {
+        return duracio;
+    }
 
-	public String getNomPeli() {
-		return nomPeli;
-	}
+    public void setDuracio(int duracio) {
+        this.duracio = duracio;
+    }
 
-	public void setNomPeli(String nomPeli) {
-		this.nomPeli = nomPeli;
-	}
+    public String getDirector() {
+        return director;
+    }
 
-	public String getNacionalitat() {
-		return nacionalitat;
-	}
+    public void setDirector(String director) {
+        this.director = director;
+    }
 
-	public void setNacionalitat(String nacionalitat) {
-		this.nacionalitat = nacionalitat;
-	}
+    public String getInterprets() {
+        return interprets;
+    }
 
-	public int getDuracio() {
-		return duracio;
-	}
+    public void setInterprets(String interprets) {
+        this.interprets = interprets;
+    }
 
-	public void setDuracio(int duracio) {
-		this.duracio = duracio;
-	}
+    public String getArgument() {
+        return argument;
+    }
 
-	public String getDirector() {
-		return director;
-	}
+    public void setArgument(String argument) {
+        this.argument = argument;
+    }
 
-	public void setDirector(String director) {
-		this.director = director;
-	}
+    public String getGenere() {
+        return genere;
+    }
 
-	public String getInterprets() {
-		return interprets;
-	}
+    public void setGenere(String genere) {
+        this.genere = genere;
+    }
 
-	public void setInterprets(String interprets) {
-		this.interprets = interprets;
-	}
+    public String getClassificacio() {
+        return classificacio;
+    }
 
-	public String getArgument() {
-		return argument;
-	}
+    public void setClassificacio(String classificacio) {
+        this.classificacio = classificacio;
+    }
 
-	public void setArgument(String argument) {
-		this.argument = argument;
-	}
+    public ArrayList<Sessio> getSessionsPeli() {
+        return sessionsPeli;
+    }
 
-	public String getGenere() {
-		return genere;
-	}
+    public void setSessionsPeli(ArrayList<Sessio> sessionsPeli) {
+        this.sessionsPeli = sessionsPeli;
+    }
 
-	public void setGenere(String genere) {
-		this.genere = genere;
-	}
-
-	public String getClassificacio() {
-		return classificacio;
-	}
-
-	public void setClassificacio(String classificacio) {
-		this.classificacio = classificacio;
-	}
-
-	public ArrayList<Sessio> getSessionsPeli() {
-		return sessionsPeli;
-	}
-
-	public void setSessionsPeli(ArrayList<Sessio> sessionsPeli) {
-		this.sessionsPeli = sessionsPeli;
-	}
 
 }

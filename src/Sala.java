@@ -21,17 +21,18 @@ public class Sala {
 	//*********************************************************
 	//CONSTRUCTOR1
 	public Sala(int numero, int nfiles, int seients) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
+		this.numeroSala = numero;
+		this.files = nfiles;
+		this.tamanyFila = seients;
 	}
 
 	//*********************************************************
 	//CONSTRUCTOR2
 	public Sala(int numero, boolean sala3d, int nfiles, int seients) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
+		this.numeroSala = numero;
+		this.files = nfiles;
+		this.tamanyFila = seients;
+		this.sala3D = sala3d;
 	}
 
 	//*********************************************************
@@ -44,21 +45,18 @@ public class Sala {
 
 	//*********************************************************
 	//ESBORRA LA SALA
-	public void esborraSala() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
+	public void esborraSala(int i) {
+		System.out.println("La sala" + i + "sha borrat");
 	}
 
 	//*********************************************************
 	//TOSTRING 
 	@Override
 	public String toString() {
-		return "Sala [numeroSala=" + numeroSala + "\n\t sala3D=" + sala3D
-				+ "\n\t files=" + files + "\n\t tamanyFila=" + tamanyFila+"]";
+		return "Sala [numeroSala=" + numeroSala + "\t sala3D=" + sala3D
+				+ "\t files=" + files + "\t tamanyFila=" + tamanyFila +"]";
 	}
-
-
+	
 	//*********************************************************
 	public  int getNumeroSala() {
 		return numeroSala;

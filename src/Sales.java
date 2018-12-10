@@ -33,8 +33,8 @@ public class Sales {
 	//MOSTRA EL LLISTAT DE SALES
 	public static void llistarSales(){
 		 for (int i = 0; i < Sales.sales.size(); i++) {
-	            System.out.println("[" + i + "]" + Sales.sales.get(i).toString());
-	}
+	            System.out.println("[" + (i + 1 ) + "]" + Sales.sales.get(i).toString());
+		 }
 
 	}
 
@@ -42,7 +42,7 @@ public class Sales {
 	//VERIFICA SI EL NUM DE SALA EXISTEIX AL LLISTAT
 	public static  boolean validaIdSala(int s){
 		 for (int i = 0; i < Sales.sales.size(); i++) {
-	            if (Sales.sales.get(i).getNumeroSala() == s) {
+	            if (Sales.sales.get(i).getNumeroSala() == (s - 1)) {
 	                return true;
 	            }
 	        }
@@ -63,8 +63,9 @@ public class Sales {
 
 	//*********************************************************
 	//ESBORRA LA SALA DE LA POSICIO i
-	public static void esborraSala(int i){
-		 Sales.sales.remove(i);
+	public static void esborraSala(int s){
+		sales.get((s -1)).esborraSala(s);
+		sales.remove((s -1 ));
 	}
 
 	//*********************************************************

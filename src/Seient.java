@@ -7,116 +7,91 @@ public class Seient {
 
 	public enum Estat {LLIURE, OCUPAT, RESERVANT}
 
-	//CONSTRUCTOR1
-	public Seient(int filaSeient,int numeroSeient, Estat disponibilitat) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+	   //CONSTRUCTOR1
+    public Seient(int filaSeient, int numeroSeient, Estat disponibilitat) {
+        this.filaSeient = filaSeient;
+        this.numeroSeient = numeroSeient;
+        this.disponibilitat = disponibilitat;
+    }
 
+    //CONSTRUCTOR2
+    public Seient(int filaSeient, int numeroSeient) {
+        this.filaSeient = filaSeient;
+        this.numeroSeient = numeroSeient;
+        this.disponibilitat = Estat.LLIURE;
+    }
 
-	//CONSTRUCTOR2
-	public Seient(int filaSeient,int numeroSeient) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    public Seient() {
+        this.disponibilitat = Estat.LLIURE;
+    }
 
-	public Seient() {
-		// TODO Auto-generated constructor stub
-	}
+    //*********************************************************
+    //metode TOSTRING
+    @Override
+    public String toString() {
+        return "Seient [filaSeient=" + filaSeient + ", numeroSeient="
+                + numeroSeient + ", disponibilitat=" + disponibilitat + "]";
+    }
 
+    //*********************************************************
+    //VERIFICA SI EL SEIENT ES LLIURE I HO MOSTRA PER PANTALLA
+    public boolean verificaSeient() {
+        if (this.getDisponibilitat() == Estat.LLIURE) {
+            System.out.println("Esta libre " + this.toString());
+            return true;
+        }
+        return false;
+    }
 
-	//*********************************************************
-	//metode TOSTRING
-	@Override
-	public String toString() {
-		return "Seient [filaSeient=" + filaSeient + ", numeroSeient="
-				+ numeroSeient + ", disponibilitat=" + disponibilitat + "]";
-	}
+    //*********************************************************
+    //VISUALITZA UNA ICONA QUE REPRESENTA L'ESTAT DEL SEIENT
+    public char iconaSeient() {
+        char c;
+        if (this.getDisponibilitat() == Estat.LLIURE) {
+            c = 'O';
+        } else if (this.getDisponibilitat() == Estat.OCUPAT) {
+            c = 'X';
+        } else {
+            c = '?';
+        }
+        return c;
+    }
 
+    //*********************************************************
+    //MODIFICA L'ESTAT DEL SEIENT UNA VEGADA SHA RESERVAT
+    public void reservaSeient() {
+        this.disponibilitat = Estat.OCUPAT;
+    }
 
-	//*********************************************************
-	//VERIFICA SI EL SEIENT ES LLIURE I HO MOSTRA PER PANTALLA
-	public boolean verificaSeient(){
+    //*********************************************************
+    //DEIXA LLIURE EL SEIENT
+    public void alliberaSeient() {
+        this.disponibilitat = Estat.LLIURE;
+    }
 
-		if(this.getDisponibilitat() == disponibilitat.OCUPAT) {
-			return false;
-		}else {
-			this.setDisponibilitat(disponibilitat.LLIURE);
-			return true;
-		}
-	}
+    //GETTERS & SETTERS
+    public int getFilaSeient() {
+        return filaSeient;
+    }
 
-	//*********************************************************
-	//VISUALITZA UNA ICONA QUE REPRESENTA L'ESTAT DEL SEIENT
-	public char iconaSeient(){
-		char visualitzaestat = ' ' ;
-		if(this.getDisponibilitat() == disponibilitat.LLIURE)
-			visualitzaestat = '?';
-		else if(this.getDisponibilitat() == disponibilitat.OCUPAT)
-			visualitzaestat = 'X';
-		else if(this.getDisponibilitat() == disponibilitat.RESERVANT)
-			visualitzaestat = 'O';
-		return visualitzaestat;
-	}
+    public void setFilaSeient(int filaSeient) {
+        this.filaSeient = filaSeient;
+    }
 
-	//*********************************************************
-	//MODIFICA L'ESTAT DEL SEIENT UNA VEGADA SHA RESERVAT
-	public  void reservaSeient() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    public int getNumeroSeient() {
+        return numeroSeient;
+    }
 
-	//*********************************************************
-	//DEIXA LLIURE EL SEIENT
-	public  void alliberaSeient() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    public void setNumeroSeient(int numeroSeient) {
+        this.numeroSeient = numeroSeient;
+    }
 
-	//GETTERS & SETTERS
-	public  int getFilaSeient() {
-		return filaSeient;
-	}
+    public Estat getDisponibilitat() {
+        return disponibilitat;
+    }
 
-
-
-	public  void setFilaSeient(int filaSeient) {
-		this.filaSeient = filaSeient;
-	}
-
-
-
-	public  int getNumeroSeient() {
-		return numeroSeient;
-	}
-
-
-
-	public  void setNumeroSeient(int numeroSeient) {
-		this.numeroSeient = numeroSeient;
-	}
-
-
-
-	public  Estat getDisponibilitat() {
-		return disponibilitat;
-	}
-
-
-
-	public  void setDisponibilitat(Estat disponibilitat) {
-		this.disponibilitat = disponibilitat;
-	}
-
-
-
-
-
-
-
+    public void setDisponibilitat(Estat disponibilitat) {
+        this.disponibilitat = disponibilitat;
+    }
 
 }

@@ -3,100 +3,83 @@ import java.util.Scanner;
 
 
 public class Pelicules {
+    private static ArrayList<Pelicula> pelicules;
 
-	private static ArrayList<Pelicula> pelicules;
+    //CONSTRUCTOR1
+    public Pelicules() {
+        pelicules = new ArrayList<>();
+    }
 
-	//CONSTRUCTOR1
-	public Pelicules() {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //CONSTRUCTOR2
+    public Pelicules(ArrayList<Pelicula> pelicules) {
+        Pelicules.pelicules = pelicules;
+    }
 
-	//CONSTRUCTOR2
-	public Pelicules(ArrayList<Pelicula> pelicules) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //*********************************************************
+    //AFEGIR PELICULA AL LLISTAT
+    public static void afegirPelicula(Pelicula s) {
+        Pelicules.pelicules.add(s);
+    }
 
-	//*********************************************************
-	//AFEGIR PELICULA AL LLISTAT
-	public static void afegirPelicula(Pelicula s){
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //*********************************************************
+    //VISUALITZA TOTES LES PELICULES DISPONIBLES
+    public static int llistarPelicules() {
+        for (int i = 0; i < Pelicules.pelicules.size(); i++) {
+            System.out.println("[" + ( i + 1 ) + "] " + Pelicules.pelicules.get(i).toString());
+        }
+        return  Pelicules.pelicules.size();
+    }
 
-	//*********************************************************
-	//COMPROVA SI LA ALGUNA PELICULA JA HA ESTAT INTRODUIDA  
-	public static boolean validaIdSessio(String s){
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //*********************************************************
+    //RETORNA PELICULA DE LA POSICIO i
+    public static Pelicula retornaPelicula(int i) {
+        return Pelicules.pelicules.get(i);
+    }
 
-	//*********************************************************
-	//VISUALITZA TOTES LES PELICULES DISPONIBLES
-	public static int llistarPelicules(){
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //*********************************************************
+    //MODIFICA PELICULA DE LA POSICIO i
+    public static void modificaPelicula(int i) {
+        //...
+        // IMPLEMENTAR CODI ACÍ
+        //...
+    }
 
+    //*********************************************************
+    //ESBORRA LA PELICULA DE LA POSICIO i
+    public static void esborraPelicula(int i) {
+        if (Pelicules.retornaPelicula(i) != null) {
+            Pelicules.pelicules.remove(i);
+        } else {
+            System.out.println("No existe dicha pelicula");
+        }
+    }
 
-	//*********************************************************
-	//RETORNA PELICULA DE LA POSICIO i
-	public static Pelicula retornaPelicula(int i){
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //*********************************************************
+    //NUMERO DE PELICULES
+    public static int quantitatPelicules() {
+        return Pelicules.pelicules.size();
+    }
 
-	//*********************************************************
-	//MODIFICA PELICULA DE LA POSICIO i
-	public static void modificaPelicula(int i){
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    // ---------------------------------
+    public void associaPeliculaSessio(Pelicules pelicules, Sessions sessions) {
+        //...
+        // IMPLEMENTAR CODI ACÍ
+        //...
+    }
 
-	//*********************************************************
-	//ESBORRA LA PELICULA DE LA POSICIO i
-	public static void esborraPelicula(int i){
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    public static void asociarPeliculaSesion(Pelicula pel, Sessio ses) {
+        pel.getSessionsPeli().add(ses);
+    }
 
-	//*********************************************************
-	//NUMERO DE PELICULES
-	public static int quantitatPelicules(){
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
+    //-------------------------------------
+    //GETTERS & SETTERS
+    public ArrayList<Pelicula> getPelicules() {
+        return pelicules;
+    }
 
-
-	// ---------------------------------
-
-	public void associaPeliculaSessio(Pelicules pelicules, Sessions sessions) {
-		//...
-		// IMPLEMENTAR CODI ACÍ
-		//...
-	}
-
-	//-------------------------------------
-
-	//GETTERS & SETTERS
-	public  ArrayList<Pelicula> getPelicules() {
-		return pelicules;
-	}
-
-	public  void setPelicules(ArrayList<Pelicula> pelicules) {
-		this.pelicules = pelicules;
-	}
-
+    public void setPelicules(ArrayList<Pelicula> pelicules) {
+        this.pelicules = pelicules;
+    }
 
 }
 
