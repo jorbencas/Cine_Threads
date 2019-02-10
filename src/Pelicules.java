@@ -91,7 +91,55 @@ public class Pelicules {
 	}
 
 
-	
+	//*********************************************************
+	//Associa una SESSIO a una PELICULA
+	public void associaPeliculaSessio(Pelicules pelicules, Sessions sessions) {
+		Scanner s = new Scanner(System.in);
+		Sessio se = null;
+		Pelicula p = null;
+		int numSessionsLliures;
+		if (Pelicules.quantitatPelicules() == 0) { //Si NO hi ha PELICULES, s'ix
+			System.out.println("\t No hi ha PELICULES per ASSOCIAR");
+			return;
+		}
+
+		if (Sessions.quantitatSessions() == 0) {//Si NO hi ha SESSIONS, s'ix
+			System.out.println("\t No hi ha SESSIONS per ASSOCIAR");
+			return;
+		}
+
+		//Llista actual de PELICULES
+		System.out.println("\n\tLlista actual de PELICULES\n\t--------------------------");
+		Pelicules.llistarPelicules();
+
+		int numPelicula = Validacio.validaSencer("\n\tTria una PELICULA: ", Pelicules.quantitatPelicules());
+		p = Pelicules.retornaPelicula(numPelicula);
+
+		//Llista actual de les SESSIONS de la PELICULA
+		System.out.println("\n\tLlistat actual de SESSIONS per la PELICULA " + p.getNomPeli()+"\n\t---------------------------------------");
+		p.llistarSessionsPeli();
+
+		//Llistat de TOTES les Sessions assignables a la PELICULA
+		System.out.println("Llistat assignable de SESSIONS\n\t--------------------------");
+		numSessionsLliures = Sessions.llistarSessionsLliures();
+
+		if (numSessionsLliures == 0) { //Si NO hi ha SESSIONS, s'ix
+			System.out.println("\t No hi ha SESSIONS LLIURES per ASSOCIAR");
+			return;
+		}
+
+		int numSessio = Validacio.validaSencer("\n\tTria una SESSIO del llistat de les disponibles: ", Sessions.quantitatSessions());
+
+		se = Sessions.retornaSessio(numSessio);
+
+		if (p.getSessionsPeli().contains(se)){	//Si conté la PELICULA a la SESSIO
+			System.out.println("PELICULA ja associada a la SESSIO escollida");
+
+		} else{ //Si no estava a la llista, s'afegeix
+			p.getSessionsPeli().add(se);
+			se.setAssignadaPeli(true);
+		}//end else
+	}
 
 	//-------------------------------------
 

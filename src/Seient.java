@@ -5,7 +5,7 @@ public class Seient {
 	private int numeroSeient;
 	private Estat disponibilitat;
 
-	public enum Estat {LLIURE, OCUPAT, RESERVANT}
+	public enum Estat {LLIURE, OCUPAT, RESERVAT}
 
 	//Constructor 1
 	public Seient(int filaSeient,int numeroSeient, Estat disponibilitat) {
@@ -43,8 +43,8 @@ public class Seient {
 			System.out.println("\t ERROR Cine:verificaSeient: Seient OCUPAT"); 
 			return false;
 
-		case RESERVANT://RESERVAT
-			System.out.println("\t ERROR Cine:verificaSeient: Seient RESERVANT, intenta-ho passat un temps"); 
+		case RESERVAT://RESERVAT
+			System.out.println("\t ERROR Cine:verificaSeient: Seient RESERVAT, intenta-ho passat un temps"); 
 			return false;
 		default: 
 			System.out.println("\t ERROR Cine:verificaSeient: Cas no contemplat");
@@ -66,7 +66,7 @@ public class Seient {
 			caracter='X'; 
 			break;
 
-		case RESERVANT: 
+		case RESERVAT: 
 		default://RESERVAT
 			caracter='?'; 
 		}
@@ -74,9 +74,9 @@ public class Seient {
 	}
 
 	//*********************************************************
-	//Modifica L'ESTAT del SEIENT a RESERVANT
-	public  void reservantSeient() {
-		this.disponibilitat = Estat.RESERVANT;
+	//Modifica L'ESTAT del SEIENT a RESERVAT
+	public  void reservaSeient() {
+		this.disponibilitat = Estat.RESERVAT;
 	}
 
 	//*********************************************************

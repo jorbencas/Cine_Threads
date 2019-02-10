@@ -32,11 +32,11 @@ public class Sessio {
 
 	//*********************************************************
 	//Constructor 2
-	public Sessio(String nomSessio, int dia,int mes, int any, int hora, int minuts, Sala sala, BigDecimal preu) {
+	public Sessio(String nomSessio, int dia, int mes, int any, int hora, int minuts, Sala sala, BigDecimal preu) {
 
 		this.nomSessio = nomSessio;
 		this.data = Calendar.getInstance();
-		this.data.set(any, mes, dia, hora, minuts);
+		this.data.set(any, mes-1, dia, hora, minuts);
 		this.sala = sala;
 		this.preu = preu;
 		this.seients = new Seient[sala.getFiles()][sala.getTamanyFila()];
@@ -182,12 +182,17 @@ public class Sessio {
 	//Mostra DATA en format espanyol
 	public void mostraDataFormatada(){
 		int day = this.data.get(Calendar.DAY_OF_MONTH);
-		int month = this.data.get(Calendar.MONTH);
+		int month = this.data.get(Calendar.MONTH)+1;
 		int year = this.data.get(Calendar.YEAR);
 		int hour = this.data.get(Calendar.HOUR_OF_DAY);
 		int minute = this.data.get(Calendar.MINUTE);
+		String minuteStr = String.valueOf(minute);
 
-		System.out.print(day+"/"+month+"/"+year+" "+hour+":"+minute);
+		if (minuteStr.length()==1) 
+			System.out.print(day+"/"+month+"/"+year+" "+hour+":"+"0".concat(minuteStr) + "h ");
+		else 
+			System.out.print(day+"/"+month+"/"+year+" "+hour+":"+minuteStr + "h ");
+		
 	}
 
 
@@ -195,14 +200,14 @@ public class Sessio {
 	//Mostra TICKET de compra de la PELICULA
 	public void imprimirTicket(Seient s, Sessio se, Sala sa, Pelicula p){
 		System.out.println("Imprimint el seu Ticket...");
-		System.out.println("***************************");
-		System.out.println("* ***TICKET ENTRADA *******");
+		System.out.println("*****************************");
+		System.out.println("* ***TICKET ENTRADA *********");
 		System.out.println("* PELICULA: "+ p.getNomPeli() +" *");
 		System.out.print("* HORARI: ");
 		se.mostraDataFormatada();
-		System.out.println("*\n* Seient FILA:"+(s.getFilaSeient()+1)+ " SEIENT:"+(s.getNumeroSeient()+1)+"*");
-		System.out.println("* Preu: "+ se.getPreu()+" €");
-		System.out.println("****************************");
+		System.out.println("*\n* Seient FILA:"+(s.getFilaSeient()+1)+ " SEIENT:"+(s.getNumeroSeient()+1)+" *");
+		System.out.println("* Preu: "+ se.getPreu()+" €       *");
+		System.out.println("*****************************");
 
 
 	}

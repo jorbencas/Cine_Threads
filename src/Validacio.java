@@ -11,24 +11,25 @@ public class Validacio {
 		boolean validatSencer = false;
 
 		Scanner s = new Scanner(System.in);
-		do {
-			System.out.print(missatge);
-			cadena = s.next();
-			if (cadena.matches("^(?!^0)\\d{1,9}$")) { // valor numeric
-				sencer = Integer.parseInt(cadena);
-				if (sencer <= maxSencer)
-					validatSencer = true;
-				else
-					System.out.println("\tERROR: Numero fora de rang");
-			} else { // valor NO numeric
-				System.out.println("\tERROR: Valor no numeric");
-			}
-		} while (!validatSencer);
-		//s.close();
+		synchronized(s) {
+			do {
+				System.out.print(missatge);
+				cadena = s.next();
+				if (cadena.matches("^(?!^0)\\d{1,9}$")) { // valor numeric
+					sencer = Integer.parseInt(cadena);
+					if (sencer <= maxSencer)
+						validatSencer = true;
+					else
+						System.out.println("\tERROR: Numero fora de rang");
+				} else { // valor NO numeric
+					System.out.println("\tERROR: Valor no numeric");
+				}
+			} while (!validatSencer);
+			//s.close();
 
-		return sencer;
+			return sencer;
+		}
 	}
-
 	// --------------------------------------------------
 	//metode que  mostra per pantalla missatge i retorna el valor introduit per teclat o,
 	//si es polsa INTRO retorna el valor defecte(3r argument),
