@@ -142,8 +142,11 @@ public class Cine {
 			case 11: //Comprar ENTRADA
 				System.out.println("Comprant ENTRADA...");
 				
+				Servidor servidor = new Servidor(2,1,llistaSeients1 = new ArrayList<Seient>());
+				
+				
 				//COMPRA ENTRADES FIL NO INTERACTIVA, amb uns valors ja predefinits on hi ha conflicte
-				FilCompraEntradesNoInteractiva noufil1 = new FilCompraEntradesNoInteractiva(2,1,llistaSeients1 = new ArrayList<Seient>());
+				/*FilCompraEntradesNoInteractiva noufil1 = new FilCompraEntradesNoInteractiva();
 				FilCompraEntradesNoInteractiva noufil2 = new FilCompraEntradesNoInteractiva(2,1,llistaSeients2 = new ArrayList<Seient>());
 				FilCompraEntradesNoInteractiva noufil3 = new FilCompraEntradesNoInteractiva(2,1,llistaSeients3 = new ArrayList<Seient>());
 				FilCompraEntradesNoInteractiva noufil4 = new FilCompraEntradesNoInteractiva(2,1,llistaSeients4= new ArrayList<Seient>());
@@ -159,16 +162,18 @@ public class Cine {
 				llistaSeients3.add(new Seient(2,4));
 				
 				llistaSeients4.add(new Seient(2,4));
-				llistaSeients4.add(new Seient(1,4));
+				llistaSeients4.add(new Seient(1,4));*/
 				
-				Thread fil1 = new Thread(noufil1,"Fil1");
+				servidor.start();
+				servidor.join();
+				/*Thread fil1 = new Thread(noufil1,"Fil1");
 				Thread fil2 = new Thread(noufil2,"Fil2");
 				Thread fil3 = new Thread(noufil3,"Fil3");
 				Thread fil4 = new Thread(noufil4,"Fil4");
 				fil1.start();
 				fil2.start();
 				fil3.start();
-				fil4.start();
+				fil4.start();*/
 				
 				System.out.println("\n\n");
 
@@ -277,77 +282,7 @@ public class Cine {
  */
 	// ----------------------------------------
 	// METODE DE COMPRA ENTRADES DEL FIL D'EXECUCIO NO INTERACTIU
-		public static void reserva_numEntradesNoInteractiva(Pelicula p, Sessio se, Sala sa, ArrayList <Seient> llistaSeients) throws InterruptedException {
-			boolean isreservat = true;
-			int nFila, nSeient;
-			int nEntrades = llistaSeients.size();
-			
-			//ArrayList de la quantitat de seients que es volen comprar
-			ArrayList<Seient> seientsAcomprar = new ArrayList<Seient>();
-
-			//obtenim els Seients ACTUALSde la Sala
-			Seient[][] seients = se.getSeients();
-
-			for (int i = 0; i < nEntrades; i++) 
-				System.out.println("["+Thread.currentThread().getName()+ "]\t Tractant reservar Seient ("+llistaSeients.get(i).getFilaSeient() +","+llistaSeients.get(i).getNumeroSeient()+"): Estat ACTUAL: " + seients[llistaSeients.get(i).getFilaSeient() - 1][llistaSeients.get(i).getNumeroSeient() - 1].getDisponibilitat());
-				
-			for (int i = 0; i < nEntrades; i++) {
-				nFila = llistaSeients.get(i).getFilaSeient();
-				nSeient = llistaSeients.get(i).getNumeroSeient();
-
-				// 
-				// SYNCHRONIZED ///////////////////////////////////////////////////////////////////////////////////////////////////
-				synchronized (seients[nFila - 1][nSeient - 1]) {
-					if (seients[nFila - 1][nSeient - 1].verificaSeient()) { // Reserva SEIENT
-						seients[nFila - 1][nSeient - 1].reservaSeient(); 
-						// afegeix seient a llista SEIENTS RESERVATS
-						seientsAcomprar.add(seients[nFila - 1][nSeient - 1]);
-					} else { // NO Reserva
-						isreservat = false;
-						System.out.println("["+Thread.currentThread().getName()+ "]\t ERROR Thread:validaSeientsNoInteractiu: Seient ("+nFila +","+nSeient+") OCUPAT o RESERVAT");
-					}// else
-				}
-				// end SYNCHRONIZED	// ///////////////////////////////////////////////////////////////////////////////////////////
-			}// for
-
-			if (isreservat) { // Compra seients
-				System.out.println("[" +Thread.currentThread().getName()+ "]\t SEIENT RESERVATS: " + seientsAcomprar.size());
-				//pagamentEntrada
-				Cine.pagamentEntrada(new BigDecimal(nEntrades).multiply(se.getPreu()));;
-				for (int i=0; i < seientsAcomprar.size(); i++){
-					Seient s = seientsAcomprar.get(i);
-					s.ocupaSeient(); 		//ocupa seient
-					se.imprimirTicket(s,se, sa, p);
-					System.out.println();
-				}//for
-			}else{// Llibera seients
-				System.out.println("["+Thread.currentThread().getName()+ "]\t\tNO sha pogut fer la compra de "+nEntrades+" entrades. Es queden Lliures");
-				for (int i=0; i < seientsAcomprar.size(); i++){
-					Seient s = seientsAcomprar.get(i);
-					s.alliberaSeient(); 		//ocupa seient
-				}//for
-			}
-			for (int i=seientsAcomprar.size(); i > 0; i--)
-				seientsAcomprar.remove(i-1); //elimina seient de la llista
-
-		}
-	//*********************************************************
-	//PAGAMENT D'UNA ENTRADA
-	static boolean pagamentEntrada(BigDecimal preu){
-		System.out.println("["+Thread.currentThread().getName()+"] Import a pagar: "+preu);
-		System.out.println("\n["+Thread.currentThread().getName()+"] Pagant...(2seg)");
-		//pagant
-		try {
-			Thread.sleep((long) (2000*Math.random()));
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		//return Validacio.validaBooleaDefecte("["+Thread.currentThread().getName()+"] Pagat? (S/N)",true);
-		return true;
-
-	}
+	
 
 	
 	//*********************************************************

@@ -77,6 +77,13 @@ public class Sessions {
 		}
 	}
 
+	public static String respuestaSessionsTCP() {
+        String linea = "\n";
+        for (int i = 0; i < sessions.size(); i++) {
+            linea = linea + "[" + i + "]" + sessions.get(i).getNomSessio() + " " + sessions.get(i).getPreu() + " " + sessions.get(i).getData().getTime() + "\n";
+        }
+        return linea;
+	}
 	//*********************************************************
 	//RETORNA LA SESSIO LLIURE DE LA POSICIO i
 	/*	public static Sessio retornaSessioLliure(int index){
@@ -139,6 +146,8 @@ public class Sessions {
 	public  void setSessions(ArrayList<Sessio> sessions) {
 		this.sessions = sessions;
 	}
+
+	
 
 
 }

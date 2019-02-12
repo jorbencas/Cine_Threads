@@ -41,6 +41,23 @@ public class Sales {
 
 	}
 
+	//Llista les SALES
+		public static String LlistarSales(){
+			String sala = "";
+			if (quantitatSales()==0) 
+				System.out.println("\n\t No hi ha cap SALA registrada");
+			else {
+				System.out.println("\n******** SALES *******");
+				for(int i=1; i<=quantitatSales();i++){
+					sala = sala +"\n\t "+i+"-> "+sales.get(i-1).toString()+ "\t---";
+				}
+				System.out.println();
+			}
+			
+			return String.valueOf(quantitatSales()) + "|" + sala;
+
+		}
+		
 	//*********************************************************
 	//Verifica si el identificador de SALA existeix al Llistat
 	//Retorna TRUE: Sala NO existeix

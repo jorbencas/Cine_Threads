@@ -178,6 +178,27 @@ public class Sessio {
 		System.out.println("\n\t SIMBOLOGIA: X=ocupat; O=lliure; ?=reservant\n\n");
 	}
 
+	 public String mapaSessionTCP() {
+	        String res = "";
+	        res = "\n\t --------  MAPA SESSIO  -----------" + "\n \tSeient-> ";
+	        for (int x = 1; x <= this.sala.getTamanyFila(); x++) {
+	            //System.out.print(x + "  ");
+	            res = res + "" + x + " ";
+	        }
+	        res = res + "\n";
+	        for (int i = 0; i < this.sala.getTamanyFila(); i++) {
+	            //System.out.print("\t Fila " + (i + 1) + ": ");
+	            res = res + "\t Fila " + (i + 1) + ": ";
+	            for (int j = 0; j < this.sala.getFiles(); j++) {
+	                // System.out.print(" " + this.seients[i][j].iconaSeient() + " ");
+	                res = res + " " + this.seients[i][j].iconaSeient() + " ";
+	            }//endfor	
+	            //System.out.println();
+	            res = res + "\n";
+	        }//endfor
+	        return res;
+
+	}
 	//*********************************************************
 	//Mostra DATA en format espanyol
 	public void mostraDataFormatada(){
