@@ -95,7 +95,6 @@ public class Cine {
 				}
 				System.out.println("\n\n");
 				break;
-				//********
 
 			case 7: //Crear PELICULA
 				System.out.println("Creant PELICULA...");
@@ -140,47 +139,11 @@ public class Cine {
 				break;
 
 			case 11: //Comprar ENTRADA
-				System.out.println("Comprant ENTRADA...");
-				
-				Servidor servidor = new Servidor(2,1,llistaSeients1 = new ArrayList<Seient>());
-				
-				
-				//COMPRA ENTRADES FIL NO INTERACTIVA, amb uns valors ja predefinits on hi ha conflicte
-				/*FilCompraEntradesNoInteractiva noufil1 = new FilCompraEntradesNoInteractiva();
-				FilCompraEntradesNoInteractiva noufil2 = new FilCompraEntradesNoInteractiva(2,1,llistaSeients2 = new ArrayList<Seient>());
-				FilCompraEntradesNoInteractiva noufil3 = new FilCompraEntradesNoInteractiva(2,1,llistaSeients3 = new ArrayList<Seient>());
-				FilCompraEntradesNoInteractiva noufil4 = new FilCompraEntradesNoInteractiva(2,1,llistaSeients4= new ArrayList<Seient>());
-				
-				llistaSeients1.add(new Seient(1,1));
-				llistaSeients1.add(new Seient(1,2));
-				
-				llistaSeients2.add(new Seient(1,2));
-				llistaSeients2.add(new Seient(2,2));
-				
-				llistaSeients3.add(new Seient(2,2));
-				llistaSeients3.add(new Seient(2,3));
-				llistaSeients3.add(new Seient(2,4));
-				
-				llistaSeients4.add(new Seient(2,4));
-				llistaSeients4.add(new Seient(1,4));*/
-				
+				Servidor servidor = new Servidor();
 				servidor.start();
 				servidor.join();
-				/*Thread fil1 = new Thread(noufil1,"Fil1");
-				Thread fil2 = new Thread(noufil2,"Fil2");
-				Thread fil3 = new Thread(noufil3,"Fil3");
-				Thread fil4 = new Thread(noufil4,"Fil4");
-				fil1.start();
-				fil2.start();
-				fil3.start();
-				fil4.start();*/
-				
-				System.out.println("\n\n");
-
 				break;
 				//********
-
-
 			default: System.out.println("Eixint CINE...\n Programa finalitzat!!!");
 			System.out.println("\n\n");
 
@@ -188,103 +151,7 @@ public class Cine {
 		}while(opcio!=0);
 
 	}
-	/*
-	//*********************************************************
-	//COMPRA INTERACTIVA D'UNA ENTRADA -> MENEJAT AL FIL D'EXECUCIO
-	public static void compraEntradaPelicula() throws InterruptedException{
 
-		Pelicula p = null;
-		Sala sa = null;
-		Sessio se = null;
-		int sessio, pelicula, fila, seient, numEntrades; 
-
-		//Si NO hi ha PELICULES, s'ix del procés de compra
-		if (Pelicules.llistarPelicules() == 0) {
-			System.out.println("\t ERROR Cine:compraEntradaPelicula: No hi ha PELICULES");
-			return;
-		}
-		//Selecció de PELICULA
-		pelicula = Validacio.validaSencer("\t Tria PELICULA:",Pelicules.quantitatPelicules());
-		p = Pelicules.retornaPelicula(pelicula);
-		System.out.println(p);
-		System.out.println();
-		System.out.println();
-
-		//Si NO hi ha SESSIONS per la PELICULA, s'ix del procés de compra
-		if (p.llistarSessionsPeli()== 0) {
-			System.out.println("\t ERROR Cine:compraEntradaPelicula: No hi ha SESSIONS per a esta PELICULA");
-			return;
-		}
-		//Selecció de la SESSIO
-		sessio = Validacio.validaSencer("\t Tria la sessió per a "+p.getNomPeli()+":",p.getSessionsPeli().size());
-
-		se = p.retornaSessioPeli(sessio);
-		sa = se.getSala();
-		se.mapaSessio();
-
-		//Selecció de QUANTES entrades es volen comprar
-		numEntrades = Validacio.validaSencer("\tQuantes ENTRADES vols comprar? ",sa.getFiles()*sa.getTamanyFila());
-		Seient[][] seients = se.getSeients();
-
-		//metode que gestiona la compra multiple d'entrades
-		reserva_numEntrades(p,se,sa,numEntrades);
-
-		se.mapaSessio();
-	}
-
-	//---------------------
-	//metode que tracta de reservar totes les entrades sol·licitades, 
-	// retorna TRUE  -> si es reserven TOTES les entrades
-	// retorna FALSE -> si NO s'ha pogut reservar alguna entrada, aleshores no es reservarà CAP
-		 
-		public static void reserva_numEntrades(Pelicula p, Sessio se, Sala sa, int numEntrades) throws InterruptedException{
-		boolean isReservat = true;
-		int fila, seient;
-		//ArrayList de la quantitat de seients que es volen comprar
-		ArrayList<Seient> seientsAcomprar = new ArrayList<Seient>();
-
-		for (int i=0; i < numEntrades; i++){
-			System.out.println("\tSeient "+(i+1)+" :");
-			fila = Validacio.validaSencer("\t\t Tria FILA: [1-"+sa.getFiles()+"] ",sa.getFiles());
-			seient = Validacio.validaSencer("\t\t Tria SEIENT en la fila: [1-"+sa.getTamanyFila()+"]",sa.getTamanyFila());		
-			Seient[][] seients = se.getSeients();
-			if (seients[fila-1][seient-1].verificaSeient()){ //Reserva SEIENT
-				seients[fila-1][seient-1].reservaSeient();	
-				seientsAcomprar.add(seients[fila-1][seient-1]);//afegeix seient a llista SEIENTS RESERVATS
-			}else{ //NO Reserva
-				System.out.println("\t ERROR Cine:validaSeient: Seient reservat/ocupat");
-				isReservat = false;
-			};
-			System.out.println("\tSegüent Seient...");
-		}//endfor
-
-		if (isReservat){ //Compra seients
-			System.out.println("\nSEIENT RESERVATS: "+seientsAcomprar.size());
-			pagamentEntrada(new BigDecimal(numEntrades).multiply(se.getPreu()));
-			for (int i=0; i < seientsAcomprar.size(); i++){
-				Seient s = seientsAcomprar.get(i);
-				s.ocupaSeient(); 		//ocupa seient
-				se.imprimirTicket(s,se, sa, p);
-				System.out.println();
-			}//for
-		}else{// Llibera seients
-			System.out.println("\t\tNO sha pogut fer la compra de "+numEntrades+" entrades. Es queden Lliures");
-			for (int i=0; i < seientsAcomprar.size(); i++){
-				Seient s = seientsAcomprar.get(i);
-				s.alliberaSeient(); 		//ocupa seient
-			}//for
-		}
-		for (int i=seientsAcomprar.size(); i > 0; i--)
-			seientsAcomprar.remove(i-1); //elimina seient de la llista
-
-		}
-
- */
-	// ----------------------------------------
-	// METODE DE COMPRA ENTRADES DEL FIL D'EXECUCIO NO INTERACTIU
-	
-
-	
 	//*********************************************************
 	//VISUALITZA EL MENU PRINCIPAL
 	public static int menu(){

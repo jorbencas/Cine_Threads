@@ -5,69 +5,103 @@ import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ClientThread implements Runnable {
 
 	private int numclient;
-	
-	 Socket socket;
-	 DataInputStream entrada;
-	 DataOutputStream salida;
-	 String mensa = "11";
-	 boolean iterar = true;
-		int nPelicula = 0;
-		int nSessio;
-		ArrayList <Seient> llistaSeients;
-		int fila = 0;
-		int col = 0;
-		Sessio se;
-		Pelicula p;
-	public ClientThread(Socket socket, int numclient,int nPelicula, int nSessio, ArrayList <Seient> llistaSeients) {
+	Socket socket;
+	DataInputStream entrada;
+	DataOutputStream salida;
+	String mensa = "11";
+	boolean iterar = true;
+	int nPelicula = 0;
+	int nSessio;
+	ArrayList <Seient> llistaSeients;
+	int fila = 0;
+	int col = 0;
+	Sessio se;
+	Pelicula p;
+	int numEntradas;
+	Long tiempoCompra;
+	Long tiempoResultado;
+
+	public ClientThread(Socket socket) {
 		super();
-		this.numclient = numclient;
 		this.socket = socket;
-		this.nPelicula = nPelicula;
-		this.nSessio = nSessio;
-		this.llistaSeients = llistaSeients;
 	}
 
 	@Override
 	public void run() {
 		try {
-			
 			salida = new DataOutputStream(socket.getOutputStream());
 			entrada = new DataInputStream(socket.getInputStream());
-			System.out.println("El client " + this.numclient + "Va ha realitzar una reserva");
-			
+			System.out.println("El client " + Thread.currentThread().getName() + "Va ha realitzar una reserva");
+
 			salida.writeUTF(Pelicules.LlistaPelicules());
 			this.nPelicula = Integer.parseInt(entrada.readUTF());
-			Pelicula p = Pelicules.retornaPelicula(nPelicula);
+			System.out.println("La pelicula eleguida ha sigut: " + this.nPelicula);
+			p = Pelicules.retornaPelicula(nPelicula);
 
 			salida.writeUTF(Sessions.respuestaSessionsTCP());
 			this.nSessio = Integer.parseInt(entrada.readUTF());
-			Sessio se = p.getSessionsPeli().get(this.nSessio-1);
-			
+			System.out.println("la session eleguia ha sigut: " + this.nSessio);
+			se = p.retornaSessioPeli(this.nSessio);
+
 			System.out.println("Vamos a leer el numero de asientos");
 			String val = entrada.readUTF();
-			int entra = Integer.parseInt(val);
+			numEntradas = Integer.parseInt(val);
 			salida.writeUTF(val);
 
-			for(int i = 0; i < entra; i++) {
-				String mapa = se.mapaSessionTCP();
-				salida.writeUTF(mapa);
+			String mapa = se.mapaSessionTCP();
+			salida.writeUTF(mapa);
+
+			for(int i = 0; i < numEntradas; i++) {
 				this.fila = Integer.parseInt(entrada.readUTF());
 				this.col = Integer.parseInt(entrada.readUTF());
-				this.llistaSeients.add(new Seient(this.fila, this.col));
+				if(se.getSeients()[this.fila][this.col].verificaSeient()) {
+					se.getSeients()[this.fila ][this.col].reservaSeient();
+					llistaSeients.add(se.getSeients()[this.fila][this.col]);
+					salida.writeUTF("true");
+				}else {
+					se.getSeients()[this.fila][this.col].alliberaSeient(); 		//ocupa seient
+					salida.writeUTF("false");
+					numEntradas = 0;
+					for (Seient s : llistaSeients) 
+						s.alliberaSeient();
+					llistaSeients.removeAll(llistaSeients);
+				}
 			}
 
-			Sala sa = se.getSala();
-			try {
-				this.reserva_numEntradesNoInteractiva(p, se, sa, llistaSeients);
-				String mapa = se.mapaSessionTCP();
-				salida.writeUTF(mapa);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			Sala sa = this.se.getSala();
+			tiempoCompra = System.currentTimeMillis();
+			boolean b = pagamentEntrada(this.se.getPreu().multiply(BigDecimal.valueOf(numEntradas)));
+			tiempoResultado = System.currentTimeMillis() - tiempoCompra;
+			if (tiempoResultado > 10000){
+				for (Seient s : llistaSeients) {
+					s.alliberaSeient();
+				}
+				salida.writeUTF("tiempo");
+			}else if (!b){
+				for (Seient s : llistaSeients) {
+					s.alliberaSeient();
+				}
+				salida.writeUTF("false");
+			}else {
+				for (Seient s : llistaSeients) {
+					s.ocupaSeient();
+				}
+				salida.writeUTF("true");
+				String st="";
+
+				for (Seient s : llistaSeients) {
+					st+=imprimirTicket(s, se, sa, p);
+					System.out.println(s);
+				}
+
+				salida.writeUTF(st);
+				salida.writeUTF(se.mapaSessionTCP());
+
 			}
 			entrada.close();
 			salida.close();
@@ -76,80 +110,51 @@ public class ClientThread implements Runnable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	}
-
-	
-	public void reserva_numEntradesNoInteractiva(Pelicula p, Sessio se, Sala sa, ArrayList <Seient> llistaSeients) throws InterruptedException {
-		boolean isreservat = true;
-		int nFila, nSeient;
-		int nEntrades = llistaSeients.size();
-		
-		//ArrayList de la quantitat de seients que es volen comprar
-		ArrayList<Seient> seientsAcomprar = new ArrayList<Seient>();
-
-		//obtenim els Seients ACTUALSde la Sala
-		Seient[][] seients = se.getSeients();
-
-		for (int i = 0; i < nEntrades; i++) 
-			System.out.println("["+Thread.currentThread().getName()+ "]\t Tractant reservar Seient ("+llistaSeients.get(i).getFilaSeient() +","+llistaSeients.get(i).getNumeroSeient()+"): Estat ACTUAL: " + seients[llistaSeients.get(i).getFilaSeient() - 1][llistaSeients.get(i).getNumeroSeient() - 1].getDisponibilitat());
-			
-		for (int i = 0; i < nEntrades; i++) {
-			nFila = llistaSeients.get(i).getFilaSeient();
-			nSeient = llistaSeients.get(i).getNumeroSeient();
-
-			// 
-			// SYNCHRONIZED ///////////////////////////////////////////////////////////////////////////////////////////////////
-			synchronized (seients[nFila - 1][nSeient - 1]) {
-				if (seients[nFila - 1][nSeient - 1].verificaSeient()) { // Reserva SEIENT
-					seients[nFila - 1][nSeient - 1].reservaSeient(); 
-					// afegeix seient a llista SEIENTS RESERVATS
-					seientsAcomprar.add(seients[nFila - 1][nSeient - 1]);
-				} else { // NO Reserva
-					isreservat = false;
-					System.out.println("["+Thread.currentThread().getName()+ "]\t ERROR Thread:validaSeientsNoInteractiu: Seient ("+nFila +","+nSeient+") OCUPAT o RESERVAT");
-				}// else
-			}
-			// end SYNCHRONIZED	// ///////////////////////////////////////////////////////////////////////////////////////////
-		}// for
-
-		if (isreservat) { // Compra seients
-			System.out.println("[" +Thread.currentThread().getName()+ "]\t SEIENT RESERVATS: " + seientsAcomprar.size());
-			//pagamentEntrada
-			this.pagamentEntrada(new BigDecimal(nEntrades).multiply(se.getPreu()));;
-			for (int i=0; i < seientsAcomprar.size(); i++){
-				Seient s = seientsAcomprar.get(i);
-				s.ocupaSeient(); 		//ocupa seient
-				se.imprimirTicket(s,se, sa, p);
-				System.out.println();
-			}//for
-		}else{// Llibera seients
-			System.out.println("["+Thread.currentThread().getName()+ "]\t\tNO sha pogut fer la compra de "+nEntrades+" entrades. Es queden Lliures");
-			for (int i=0; i < seientsAcomprar.size(); i++){
-				Seient s = seientsAcomprar.get(i);
-				s.alliberaSeient(); 		//ocupa seient
-			}//for
-		}
-		for (int i=seientsAcomprar.size(); i > 0; i--)
-			seientsAcomprar.remove(i-1); //elimina seient de la llista
 
 	}
-//*********************************************************
-//PAGAMENT D'UNA ENTRADA
-private boolean pagamentEntrada(BigDecimal preu){
-	System.out.println("["+Thread.currentThread().getName()+"] Import a pagar: "+preu);
-	System.out.println("\n["+Thread.currentThread().getName()+"] Pagant...(2seg)");
-	//pagant
-	try {
-		Thread.sleep((long) (2000*Math.random()));
-	} catch (InterruptedException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+
+
+	public String imprimirTicket(Seient s, Sessio se, Sala sa, Pelicula p) {
+		String st = "";
+
+		st += ("\nImprimint el seu Ticket...\n");
+		st += ("***************************\n");
+		st += ("* ***TICKET ENTRADA *******\n");
+		st += ("* PELICULA: " + p.getNomPeli() + " *\n");
+		st += ("* HORARI: \n");
+		st = mostraDataFormatada(st);
+		st += ("*\n* Seient FILA:" + (s.getFilaSeient() + 1) + " SEIENT:" + (s.getNumeroSeient() + 1) + "*\n");
+		st += ("* Preu: " + se.getPreu() + " €\n");
+		st += ("****************************\n");
+
+		return st;
 	}
 
-	//return Validacio.validaBooleaDefecte("["+Thread.currentThread().getName()+"] Pagat? (S/N)",true);
-	return true;
+	public String mostraDataFormatada(String s) {
+		int day = se.getData().get(Calendar.DAY_OF_MONTH);
+		int month = se.getData().get(Calendar.MONTH);
+		int year = se.getData().get(Calendar.YEAR);
+		int hour = se.getData().get(Calendar.HOUR_OF_DAY);
+		int minute = se.getData().get(Calendar.MINUTE);
 
-}
+		s += (day + "/" + month + "/" + year + " " + hour + ":" + minute);
+		return s;
+	}
+
+	//*********************************************************
+	//PAGAMENT D'UNA ENTRADA
+	private boolean pagamentEntrada(BigDecimal preu) throws IOException{
+		System.out.println("["+Thread.currentThread().getName()+"] Import a pagar: "+preu);
+		String s = "true";
+
+		s += ("Import a pagar: " + preu);
+		//pagant
+
+		salida.writeUTF(s);
+		String cadenaRebuda = entrada.readUTF();
+
+		return Boolean.parseBoolean(cadenaRebuda);
+
+	}
 
 }
