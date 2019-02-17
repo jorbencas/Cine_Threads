@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class ClientThread implements Runnable {
+public class ServidorThread implements Runnable {
 
 	private int numclient;
 	Socket socket;
@@ -17,7 +17,7 @@ public class ClientThread implements Runnable {
 	boolean iterar = true;
 	int nPelicula = 0;
 	int nSessio;
-	ArrayList <Seient> llistaSeients;
+	ArrayList <Seient> llistaSeients= new ArrayList<>();
 	int fila = 0;
 	int col = 0;
 	Sessio se;
@@ -26,7 +26,7 @@ public class ClientThread implements Runnable {
 	Long tiempoCompra;
 	Long tiempoResultado;
 
-	public ClientThread(Socket socket) {
+	public ServidorThread(Socket socket) {
 		super();
 		this.socket = socket;
 	}
@@ -36,40 +36,44 @@ public class ClientThread implements Runnable {
 		try {
 			salida = new DataOutputStream(socket.getOutputStream());
 			entrada = new DataInputStream(socket.getInputStream());
-			System.out.println("El client " + Thread.currentThread().getName() + "Va ha realitzar una reserva");
+			System.out.println("El client " + Thread.currentThread().getName() + " va ha realitzar una reserva");
 
-			salida.writeUTF(Pelicules.LlistaPelicules());
+			salida.writeUTF(LlistaPelicules());
 			this.nPelicula = Integer.parseInt(entrada.readUTF());
-			System.out.println("La pelicula eleguida ha sigut: " + this.nPelicula);
+			System.out.println("El client " + Thread.currentThread().getName() +" la pelicula eleguida ha sigut: " + this.nPelicula);
 			p = Pelicules.retornaPelicula(nPelicula);
 
-			salida.writeUTF(Sessions.respuestaSessionsTCP());
+			salida.writeUTF(respuestaSessionsTCP());
 			this.nSessio = Integer.parseInt(entrada.readUTF());
-			System.out.println("la session eleguia ha sigut: " + this.nSessio);
+			System.out.println("El client " + Thread.currentThread().getName() +"la session eleguia ha sigut: " + this.nSessio);
 			se = p.retornaSessioPeli(this.nSessio);
 
-			System.out.println("Vamos a leer el numero de asientos");
+
 			String val = entrada.readUTF();
 			numEntradas = Integer.parseInt(val);
 			salida.writeUTF(val);
-
+			System.out.println("El client " + Thread.currentThread().getName() + " va ha comprar" + val + " entradas");
 			String mapa = se.mapaSessionTCP();
 			salida.writeUTF(mapa);
 
 			for(int i = 0; i < numEntradas; i++) {
 				this.fila = Integer.parseInt(entrada.readUTF());
+				System.out.println("El client " + Thread.currentThread().getName() + " va ha elegido la fila" + this.fila);
 				this.col = Integer.parseInt(entrada.readUTF());
+				System.out.println("El client " + Thread.currentThread().getName() + " va ha elegido la columna" + this.col);
 				if(se.getSeients()[this.fila][this.col].verificaSeient()) {
 					se.getSeients()[this.fila ][this.col].reservaSeient();
-					llistaSeients.add(se.getSeients()[this.fila][this.col]);
+					llistaSeients.add(se.getSeients()[this.fila ][this.col]);
 					salida.writeUTF("true");
+					System.out.println("S'han conseguit reservar els seients ");
 				}else {
-					se.getSeients()[this.fila][this.col].alliberaSeient(); 		//ocupa seient
+					se.getSeients()[this.fila][this.col].alliberaSeient();
 					salida.writeUTF("false");
 					numEntradas = 0;
 					for (Seient s : llistaSeients) 
 						s.alliberaSeient();
 					llistaSeients.removeAll(llistaSeients);
+					System.out.println("No s'han conseguit reservar els seients ,per tant tots els seient");
 				}
 			}
 
@@ -156,5 +160,30 @@ public class ClientThread implements Runnable {
 		return Boolean.parseBoolean(cadenaRebuda);
 
 	}
+
+	public String respuestaSessionsTCP() {
+		String s = "";
+
+		ArrayList<Sessio> sessions = this.p.getSessionsPeli();
+		s = sessions.size() + ";";
+		for (int i = 1; i <= sessions.size(); i++) {
+			Sessio se = sessions.get(i - 1);
+			s += (" " + i + ": " + se);
+		}
+		return s;
+	}
+
+	public String LlistaPelicules() {
+		String s = "";
+		s += Cine.pelicules.quantitatPelicules() + ";";
+		if (Cine.pelicules.quantitatPelicules() == 0)
+			s = "\n\t No hi ha cap PELICULA registrada";
+
+		for (int i = 1; i <= Cine.pelicules.quantitatPelicules(); i++) {
+			s += "\n\t " + i + "-> " + Cine.pelicules.getPelicules().get(i - 1).toString() + "\n";
+		}
+		return s;
+	}
+
 
 }

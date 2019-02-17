@@ -21,24 +21,22 @@ public class Client {
 			entrada = new DataInputStream(client.getInputStream());
 
 			mensa = entrada.readUTF();
-			String[] rex = mensa.split("|");
-			System.out.println(mensa);
-			System.out.println("Eligue la pelicula que deseas reservar");
-			String str = texto.next();
-			//int pelicula = Validacio.validaSencer("",Integer.parseInt(rex[0]));
-			//Validacio.validaSencerDefecte("", Integer.parseInt(rex[0]), pelicula);
-			salida.writeUTF(str.trim());
+			String[] rex = mensa.split(";");
+			System.out.println("Cuant: "+rex.length);
+			System.out.println(rex[1]);
+			int pelicula = Validacio.validaSencer("Eligue la pelicula que deseas reservar",Integer.parseInt(rex[0]));
+			salida.writeUTF(String.valueOf(pelicula).trim());
+			
+			
+			
+			
 			mensa = entrada.readUTF();
-			rex = mensa.split("|");
-			System.out.println(mensa);
-			System.out.println(rex[2]);
-			System.out.println("Eligue la sesion que deseas reservar");
-			str = texto.next();
-			//int sessio = Validacio.validaSencer("",Integer.parseInt(str));
-			//Validacio.validaSencerDefecte("", Integer.parseInt(rex[0]), sessio);
-			salida.writeUTF(str.trim());
-			System.out.println("Eligue el numero de reservas que deseas hacer");
-			salida.writeUTF(String.valueOf(texto.nextInt()));
+			rex = mensa.split(";");
+			System.out.println(rex[1]);
+			int sessio = Validacio.validaSencer("Eligue la sesion que deseas reservar",Integer.parseInt(rex[0]));
+			salida.writeUTF(String.valueOf(sessio).trim());
+			int nentrades = Validacio.validaSencer("Eligue el numero de reservas que deseas hacer",Integer.parseInt(rex[0]));
+			salida.writeUTF(String.valueOf(nentrades).trim());
 			String entrades = entrada.readUTF();
 			for (int i = 0; i < Integer.parseInt(entrades); i++) {
 				String mapa = entrada.readUTF();

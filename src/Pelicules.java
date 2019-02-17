@@ -45,16 +45,7 @@ public class Pelicules {
 		return quantitatPelicules();
 	}
 
-	public static String LlistaPelicules() {
-		String pelis = "";
-		if (quantitatPelicules()==0) 
-			System.out.println("\n\t No hi ha cap PELICULA registrada");
-
-		for(int i=1; i<=quantitatPelicules();i++){
-			pelis = pelis + "\n\t "+i+"-> "+pelicules.get(i-1).toString();
-		}
-		return String.valueOf(quantitatPelicules() + "|" + pelis);
-	}
+	
 	//*********************************************************
 	//Retorna la  PELICULA de la posicio i
 	public static Pelicula retornaPelicula(int i){
@@ -161,6 +152,7 @@ public class Pelicules {
 		this.pelicules = pelicules;
 	}
 
+	
 
 }
 

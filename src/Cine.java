@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 public class Cine {
 
+	static Sessions sessions;
+	static Pelicules pelicules;
 	public static void main(String[] args) throws InterruptedException {
 		int opcio=-1;
 		Scanner s = new Scanner(System.in);
@@ -15,8 +17,8 @@ public class Cine {
 		ArrayList<Seient> llistaSeients1, llistaSeients2, llistaSeients3,llistaSeients4;
 
 		Sales sales = new Sales();
-		Sessions sessions = new Sessions();
-		Pelicules pelicules = new Pelicules();
+		 sessions = new Sessions();
+		 pelicules = new Pelicules();
 
 		//carregaDades Inicials
 		carregaDadesInicials();
